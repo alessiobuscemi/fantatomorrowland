@@ -197,7 +197,6 @@
   nav button .ico { display: block; font-size: 19px; margin-bottom: 3px; filter: grayscale(1) opacity(.55); transition: filter .15s; }
   nav button.on { color: var(--acid); }
   nav button.on .ico { filter: none; }
-  nav button.on::before { content: ''; display: block; width: 22px; height: 3px; background: var(--acid); border-radius: 3px; margin: -9px auto 5px; box-shadow: 0 0 10px var(--acid); }
 
   /* ---------- toast ---------- */
   #toast {
@@ -347,7 +346,7 @@ function armOr(id, fn) {
 }
 
 /* ============ TABS ============ */
-const TABS = [ ['board', 'Board', '🏆'], ['events', 'Events', '⚡'], ['teams', 'Teams', '🎽'], ['friends', 'Friends', '💸'] ];
+const TABS = [ ['board', 'Board', '🏆'], ['events', 'Events', '⚡'], ['teams', 'Teams', '🎽'], ['friends', 'Friends', '👥'] ];
 function renderTabs() {
   document.getElementById('tabs').innerHTML = TABS.map(([id, label, ico]) =>
     `<button class="${tab === id ? 'on' : ''}" data-a="go" data-x="${id}"><span class="ico">${ico}</span>${label}</button>`).join('');
@@ -585,7 +584,7 @@ function renderFriends() {
       <button class="wide danger" data-a="importData">Replace everything with this backup</button>
     </div>
   </div>
-  <div style="text-align:center;color:var(--ink-dim);font-size:11px;letter-spacing:2px;padding:8px">build 63ac5299</div>`;
+  <div style="text-align:center;color:var(--ink-dim);font-size:11px;letter-spacing:2px;padding:8px">build a42447ef</div>`;
 }
 function addFriend() {
   const name = document.getElementById('fname').value.trim();

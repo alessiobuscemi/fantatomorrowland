@@ -134,3 +134,10 @@ test('every category has a visible icon in the UI', () => {
     assert.ok(html.includes(icon), `missing category icon ${icon}`);
   }
 });
+
+test('friends tab uses a people icon and the nav has no floating indicator line', () => {
+  const html = fs.readFileSync(path.join(__dirname, '..', 'docs', 'fantatomorrowland.html'), 'utf8');
+  assert.ok(html.includes('👥'), 'friends tab should use the people icon');
+  assert.ok(!html.includes('💸'), 'money icon is confusing for a friends tab');
+  assert.ok(!html.includes('nav button.on::before'), 'active-tab indicator line should be gone');
+});
