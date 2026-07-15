@@ -41,11 +41,17 @@
     display: flex; align-items: baseline; justify-content: space-between;
   }
   .wordmark {
-    font-weight: 900; font-size: 24px; letter-spacing: .5px; text-transform: uppercase;
+    font-weight: 900; font-size: 27px; letter-spacing: .5px; text-transform: uppercase;
     line-height: .9;
+    background: linear-gradient(95deg, var(--ink) 20%, var(--c-sex) 55%, var(--acid) 90%);
+    -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent;
   }
-  .wordmark em { font-style: normal; color: var(--acid); }
-  .wordmark small { display: block; font-size: 10px; letter-spacing: 3px; color: var(--ink-dim); font-weight: 600; margin-top: 4px; }
+  .wordmark em { font-style: normal; }
+  .wordmark small {
+    display: block; font-size: 10px; letter-spacing: 1.5px; font-weight: 600; margin-top: 6px;
+    background: none; -webkit-text-fill-color: var(--ink-dim);
+  }
   main { padding: 4px 14px 20px; max-width: 560px; margin: 0 auto; }
 
   h2 {
@@ -58,6 +64,7 @@
     border-radius: var(--radius);
     padding: 14px;
     margin-bottom: 10px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, .35);
   }
 
   /* ---------- forms ---------- */
@@ -91,7 +98,8 @@
     background: #0e0a17; color: var(--ink-dim); font-weight: 800; font-size: 14px;
     text-transform: uppercase; letter-spacing: 1px;
   }
-  .chip.on { color: #0d0a14; border-color: transparent; }
+  .chip.on { color: #0d0a14; border-color: transparent; box-shadow: 0 3px 16px rgba(0, 0, 0, .45); transform: translateY(-1px); }
+  .chip { transition: transform .12s, box-shadow .12s; }
   .chip.cat-sex.on { background: var(--c-sex); }
   .chip.cat-disgust.on { background: var(--c-disgust); }
   .chip.cat-idiocy.on { background: var(--c-idiocy); }
@@ -101,6 +109,10 @@
   .dot.cat-sex { background: var(--c-sex); } .dot.cat-disgust { background: var(--c-disgust); }
   .dot.cat-idiocy { background: var(--c-idiocy); } .dot.cat-drama { background: var(--c-drama); }
   .dot.cat-pain { background: var(--c-pain); }
+  .cattext { font-weight: 800; }
+  .cattext.cat-sex { color: var(--c-sex); } .cattext.cat-disgust { color: var(--c-disgust); }
+  .cattext.cat-idiocy { color: var(--c-idiocy); } .cattext.cat-drama { color: var(--c-drama); }
+  .cattext.cat-pain { color: var(--c-pain); }
   .tag {
     font-size: 11px; font-weight: 800; letter-spacing: 1px; text-transform: uppercase;
     padding: 3px 8px; border-radius: 6px; background: #241a35; color: var(--ink-dim);
@@ -112,7 +124,10 @@
     font-size: 34px; font-weight: 900; width: 40px; text-align: center;
     color: var(--line); font-style: italic; flex: none;
   }
-  .standing.first .rank { color: var(--acid); text-shadow: 0 0 18px rgba(216,255,62,.5); }
+  .rank-1 .rank { color: var(--acid); text-shadow: 0 0 18px rgba(216,255,62,.5); }
+  .rank-2 .rank { color: #cdd5e6; text-shadow: 0 0 12px rgba(205,213,230,.35); }
+  .rank-3 .rank { color: #d0894e; text-shadow: 0 0 12px rgba(208,137,78,.35); }
+  .rank-1.card { border-color: rgba(216,255,62,.4); }
   .standing .who { flex: 1; min-width: 0; }
   .standing .who .owner { font-size: 20px; font-weight: 900; text-transform: uppercase; letter-spacing: .5px; }
   .standing .who .cap { font-size: 12px; color: var(--ink-dim); margin-top: 3px; font-weight: 600; }
@@ -172,10 +187,12 @@
   }
   nav button {
     flex: 1; background: none; border-radius: 0; color: var(--ink-dim);
-    font-size: 11px; letter-spacing: 1.5px; padding: 14px 4px 12px; font-weight: 800;
+    font-size: 10px; letter-spacing: 1.5px; padding: 9px 4px 10px; font-weight: 800;
   }
+  nav button .ico { display: block; font-size: 19px; margin-bottom: 3px; filter: grayscale(1) opacity(.55); transition: filter .15s; }
   nav button.on { color: var(--acid); }
-  nav button.on::before { content: ''; display: block; width: 22px; height: 3px; background: var(--acid); border-radius: 3px; margin: -8px auto 6px; box-shadow: 0 0 10px var(--acid); }
+  nav button.on .ico { filter: none; }
+  nav button.on::before { content: ''; display: block; width: 22px; height: 3px; background: var(--acid); border-radius: 3px; margin: -9px auto 5px; box-shadow: 0 0 10px var(--acid); }
 
   /* ---------- toast ---------- */
   #toast {
@@ -190,7 +207,7 @@
 </style>
 
 <header>
-  <div class="wordmark">Fanta<em>tomorrowland</em><small>SEX · DISGUST · IDIOCY · DRAMA · PAIN</small></div>
+  <div class="wordmark">Fanta<em>tomorrowland</em><small>💋 SEX · 🤮 DISGUST · 🤡 IDIOCY · 🎭 DRAMA · 🤕 PAIN</small></div>
 </header>
 <main id="view"></main>
 <nav id="tabs"></nav>
@@ -264,6 +281,9 @@ if (typeof module !== 'undefined') {
 
 const LS_KEY = 'fantatomorrowland';
 const CAT_LABEL = { sex: 'Sex', disgust: 'Disgust', idiocy: 'Idiocy', drama: 'Drama', pain: 'Pain' };
+const CAT_ICON = { sex: '💋', disgust: '🤮', idiocy: '🤡', drama: '🎭', pain: '🤕' };
+// icon + colored label, used everywhere a category is shown
+function catBadge(c) { return `${CAT_ICON[c]} <span class="cattext cat-${c}">${CAT_LABEL[c]}</span>`; }
 
 /* storage adapter: some environments (sandboxed iframes, content:// pages)
    throw on any localStorage access. Fall back to memory and warn. */
@@ -321,10 +341,10 @@ function armOr(id, fn) {
 }
 
 /* ============ TABS ============ */
-const TABS = [ ['board', 'Board'], ['events', 'Events'], ['teams', 'Teams'], ['friends', 'Friends'] ];
+const TABS = [ ['board', 'Board', '🏆'], ['events', 'Events', '⚡'], ['teams', 'Teams', '🎽'], ['friends', 'Friends', '💸'] ];
 function renderTabs() {
-  document.getElementById('tabs').innerHTML = TABS.map(([id, label]) =>
-    `<button class="${tab === id ? 'on' : ''}" data-a="go" data-x="${id}">${label}</button>`).join('');
+  document.getElementById('tabs').innerHTML = TABS.map(([id, label, ico]) =>
+    `<button class="${tab === id ? 'on' : ''}" data-a="go" data-x="${id}"><span class="ico">${ico}</span>${label}</button>`).join('');
 }
 function go(t) { tab = t; ui.armed = null; render(); window.scrollTo(0, 0); }
 
@@ -342,12 +362,12 @@ function renderBoard() {
       return { name, contrib, isCap: name === t.captain };
     }).sort((a, b) => b.contrib - a.contrib);
     return `
-    <div class="card ${open ? 'open' : ''} standing-card ${i === 0 ? 'first' : ''}" data-a="toggleTeam" data-x="${t.id}">
+    <div class="card ${open ? 'open' : ''} standing-card rank-${Math.min(i + 1, 4)} ${i === 0 ? 'first' : ''}" data-a="toggleTeam" data-x="${t.id}">
       <div class="standing ${i === 0 ? 'first' : ''}">
         <div class="rank">${i + 1}</div>
         <div class="who">
-          <div class="owner">${esc(t.owner)}</div>
-          <div class="cap"><span class="capmark">©</span> ${esc(t.captain)} · <span class="dot cat-${t.captainCategory}"></span>${CAT_LABEL[t.captainCategory]} ×2</div>
+          <div class="owner">${i === 0 ? '👑 ' : ''}${esc(t.owner)}</div>
+          <div class="cap"><span class="capmark">©</span> ${esc(t.captain)} · ${catBadge(t.captainCategory)} ×2</div>
         </div>
         <div class="pts">${t.total}<small>PTS</small></div>
       </div>
@@ -371,7 +391,7 @@ function renderEvents() {
     </div>
     <label class="f">Category</label>
     <div class="chips">${CATEGORIES.map((c) =>
-      `<button class="chip cat-${c} ${e.category === c ? 'on' : ''}" data-a="evCat" data-x="${c}">${CAT_LABEL[c]}</button>`).join('')}
+      `<button class="chip cat-${c} ${e.category === c ? 'on' : ''}" data-a="evCat" data-x="${c}">${CAT_ICON[c]} ${CAT_LABEL[c]}</button>`).join('')}
     </div>
     <label class="f">Points</label>
     <div class="row">
@@ -394,7 +414,7 @@ function renderEvents() {
     <div class="card event">
       <div class="body">
         <div class="desc">${esc(ev.description) || '<span style="color:var(--ink-dim)">(no description)</span>'}</div>
-        <div class="meta">${esc(ev.friend)} · <span class="dot cat-${ev.category}"></span>${CAT_LABEL[ev.category]} · ${new Date(ev.ts).toLocaleString([], { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' })}</div>
+        <div class="meta">${esc(ev.friend)} · ${catBadge(ev.category)} · ${new Date(ev.ts).toLocaleString([], { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' })}</div>
       </div>
       <div class="pts ${ev.points < 0 ? 'neg' : 'pos'}">${ev.points > 0 ? '+' : ''}${ev.points}</div>
       <button class="danger ${ui.armed === 'ev:' + ev.id ? 'armed' : ''}" data-a="delEvent" data-x="${ev.id}">${ui.armed === 'ev:' + ev.id ? 'Sure?' : '✕'}</button>
@@ -430,7 +450,7 @@ function renderTeams() {
       <div class="standing">
         <div class="who">
           <div class="owner">${esc(t.owner)}</div>
-          <div class="cap"><span class="capmark">©</span> ${esc(t.captain)} · <span class="dot cat-${t.captainCategory}"></span>${CAT_LABEL[t.captainCategory]} ×2 · ${t.roster.length} picks · ${rosterCost(t.roster, state.friends)}/${BUDGET} cr</div>
+          <div class="cap"><span class="capmark">©</span> ${esc(t.captain)} · ${catBadge(t.captainCategory)} ×2 · ${t.roster.length} picks · ${rosterCost(t.roster, state.friends)}/${BUDGET} cr</div>
         </div>
         <button class="ghost" data-a="editTeam" data-x="${t.id}">Edit</button>
         <button class="danger ${ui.armed === 'tm:' + t.id ? 'armed' : ''}" data-a="delTeam" data-x="${t.id}">${ui.armed === 'tm:' + t.id ? 'Sure?' : '✕'}</button>
@@ -482,7 +502,7 @@ function renderBuilder() {
     </div>
     <label class="f">Captain category</label>
     <div class="chips">${CATEGORIES.map((c) =>
-      `<button class="chip cat-${c} ${b.captainCategory === c ? 'on' : ''}" data-a="bCat" data-x="${c}">${CAT_LABEL[c]}</button>`).join('')}
+      `<button class="chip cat-${c} ${b.captainCategory === c ? 'on' : ''}" data-a="bCat" data-x="${c}">${CAT_ICON[c]} ${CAT_LABEL[c]}</button>`).join('')}
     </div>
     <div class="errbox" id="berr"></div>
     <button class="primary wide" data-a="saveTeam">${b.editingId ? 'Save changes' : 'Create team'}</button>

@@ -48,3 +48,9 @@ test('service worker precaches the app and is version-stamped by the build', () 
     assert.ok(sw.includes(asset), `sw.js must precache ${asset}`);
   }
 });
+
+test('PWA index declares favicon and apple-touch-icon', () => {
+  const html = fs.readFileSync(dist('index.html'), 'utf8');
+  assert.match(html, /rel="icon"/);
+  assert.match(html, /rel="apple-touch-icon"/);
+});

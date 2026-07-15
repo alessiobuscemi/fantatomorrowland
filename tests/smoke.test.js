@@ -127,3 +127,10 @@ test('bundled app boots and every screen renders through a full game', () => {
   assert.equal(vm.runInContext('state.teams.length', second.ctx), 2);
   assert.equal(vm.runInContext('state.events.length', second.ctx), 1);
 });
+
+test('every category has a visible icon in the UI', () => {
+  const html = fs.readFileSync(path.join(__dirname, '..', 'docs', 'fantatomorrowland.html'), 'utf8');
+  for (const icon of ['💋', '🤮', '🤡', '🎭', '🤕']) {
+    assert.ok(html.includes(icon), `missing category icon ${icon}`);
+  }
+});

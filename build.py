@@ -84,14 +84,41 @@ def bundle() -> str:
     return html.replace(SRC_TAG, f"<script>\n{logic}\n</script>")
 
 
+def _mix(c1, c2, t):
+    return tuple(int(a + (b - a) * t) for a, b in zip(c1, c2))
+
+
 def make_icon(size: int) -> Image.Image:
-    """Festival icon: pink sun behind an acid-green main-stage pyramid."""
-    img = Image.new("RGB", (size, size), "#0b0812")
+    """Original festival emblem (NOT the trademarked Tomorrowland logo):
+    a symmetric main-stage gate with mirrored wings under a rising sun,
+    on a purple radial glow. Full-bleed so it works as a maskable icon."""
+    bg, glow = (11, 8, 18), (64, 34, 96)
+    pink, purple, acid, dark = "#ff3ea5", "#b26bff", "#d8ff3e", "#0b0812"
+    img = Image.new("RGB", (size, size), bg)
     d = ImageDraw.Draw(img)
     s = size
-    d.ellipse([s * 0.50, s * 0.12, s * 0.88, s * 0.50], fill="#ff3ea5")
-    d.polygon([(s * 0.10, s * 0.84), (s * 0.50, s * 0.20), (s * 0.90, s * 0.84)], fill="#d8ff3e")
-    d.polygon([(s * 0.38, s * 0.84), (s * 0.50, s * 0.54), (s * 0.62, s * 0.84)], fill="#0b0812")
+
+    # radial glow, drawn as concentric blended circles
+    cx, cy = s * 0.5, s * 0.44
+    steps = 48
+    for i in range(steps):
+        t = i / steps
+        r = s * 0.62 * (1 - t)
+        d.ellipse([cx - r, cy - r, cx + r, cy + r], fill=_mix(bg, glow, t))
+
+    # rising sun behind the gate
+    d.ellipse([s * 0.36, s * 0.10, s * 0.64, s * 0.38], fill=pink)
+
+    # mirrored side wings
+    d.polygon([(s * 0.04, s * 0.80), (s * 0.28, s * 0.34), (s * 0.44, s * 0.80)], fill=purple)
+    d.polygon([(s * 0.56, s * 0.80), (s * 0.72, s * 0.34), (s * 0.96, s * 0.80)], fill=purple)
+
+    # central stage pyramid with a dark doorway
+    d.polygon([(s * 0.24, s * 0.80), (s * 0.50, s * 0.18), (s * 0.76, s * 0.80)], fill=acid)
+    d.polygon([(s * 0.41, s * 0.80), (s * 0.50, s * 0.50), (s * 0.59, s * 0.80)], fill=dark)
+
+    # ground line
+    d.rectangle([s * 0.04, s * 0.80, s * 0.96, s * 0.835], fill=acid)
     return img
 
 
@@ -103,9 +130,13 @@ def build() -> None:
     (DIST / "fantatomorrowland.html").write_text(single, encoding="utf-8")
 
     # 2) PWA variant: manifest link + guarded service-worker registration
-    pwa = single.replace(
-        "</title>", '</title>\n<link rel="manifest" href="manifest.webmanifest">', 1
-    ) + REGISTER_SNIPPET
+    head_links = (
+        "</title>\n"
+        '<link rel="manifest" href="manifest.webmanifest">\n'
+        '<link rel="icon" href="icon-192.png">\n'
+        '<link rel="apple-touch-icon" href="icon-192.png">'
+    )
+    pwa = single.replace("</title>", head_links, 1) + REGISTER_SNIPPET
     (DIST / "index.html").write_text(pwa, encoding="utf-8")
 
     (DIST / "manifest.webmanifest").write_text(json.dumps(MANIFEST, indent=2), encoding="utf-8")
