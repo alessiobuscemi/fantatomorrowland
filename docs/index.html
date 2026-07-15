@@ -1,0 +1,678 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="theme-color" content="#0b0812">
+<title>FANTATOMORROWLAND</title>
+<link rel="manifest" href="manifest.webmanifest">
+<style>
+  :root {
+    --bg: #0b0812;
+    --bg-card: #16101f;
+    --bg-card2: #1d1529;
+    --line: #2c2140;
+    --ink: #f2ecff;
+    --ink-dim: #9d8fbe;
+    --acid: #d8ff3e;
+    --c-sex: #ff3ea5;
+    --c-disgust: #52ff7d;
+    --c-idiocy: #ffd23e;
+    --c-drama: #b26bff;
+    --c-pain: #ff5252;
+    --danger: #ff5252;
+    --radius: 14px;
+    --display: 'Avenir Next Condensed', 'Arial Narrow', 'Helvetica Neue Condensed', 'sans-serif-condensed', 'Liberation Sans Narrow', sans-serif;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  html, body { height: 100%; }
+  body {
+    background:
+      radial-gradient(60vh 60vh at 85% -10%, rgba(178,107,255,.18), transparent 70%),
+      radial-gradient(50vh 50vh at -10% 30%, rgba(255,62,165,.12), transparent 70%),
+      radial-gradient(40vh 40vh at 60% 110%, rgba(216,255,62,.07), transparent 70%),
+      var(--bg);
+    background-attachment: fixed;
+    color: var(--ink);
+    font-family: var(--display);
+    font-size: 16px;
+    min-height: 100dvh;
+    padding-bottom: 84px;
+    overscroll-behavior-y: contain;
+  }
+  header {
+    padding: 18px 16px 10px;
+    display: flex; align-items: baseline; justify-content: space-between;
+  }
+  .wordmark {
+    font-weight: 900; font-size: 24px; letter-spacing: .5px; text-transform: uppercase;
+    line-height: .9;
+  }
+  .wordmark em { font-style: normal; color: var(--acid); }
+  .wordmark small { display: block; font-size: 10px; letter-spacing: 3px; color: var(--ink-dim); font-weight: 600; margin-top: 4px; }
+  main { padding: 4px 14px 20px; max-width: 560px; margin: 0 auto; }
+
+  h2 {
+    text-transform: uppercase; font-size: 13px; letter-spacing: 2.5px;
+    color: var(--ink-dim); margin: 22px 2px 10px; font-weight: 700;
+  }
+  .card {
+    background: linear-gradient(160deg, var(--bg-card2), var(--bg-card));
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 14px;
+    margin-bottom: 10px;
+  }
+
+  /* ---------- forms ---------- */
+  input[type=text], input[type=number], select {
+    width: 100%; background: #0e0a17; color: var(--ink);
+    border: 1px solid var(--line); border-radius: 10px;
+    padding: 12px; font-size: 16px; font-family: var(--display);
+    appearance: none; outline: none;
+  }
+  input:focus, select:focus { border-color: var(--acid); }
+  label.f { display: block; font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--ink-dim); margin: 12px 0 6px; font-weight: 700; }
+  .row { display: flex; gap: 8px; }
+  .row > * { flex: 1; }
+  button {
+    font-family: var(--display); font-size: 15px; font-weight: 800;
+    border: none; border-radius: 10px; padding: 12px 14px;
+    background: #241a35; color: var(--ink); cursor: pointer;
+    text-transform: uppercase; letter-spacing: 1px;
+  }
+  button:active { transform: scale(.97); }
+  button.primary { background: var(--acid); color: #14120a; box-shadow: 0 0 24px rgba(216,255,62,.25); }
+  button.ghost { background: transparent; border: 1px solid var(--line); color: var(--ink-dim); }
+  button.danger { background: transparent; border: 1px solid #5a2430; color: var(--danger); }
+  button.danger.armed { background: var(--danger); border-color: var(--danger); color: #fff; }
+  button.wide { width: 100%; margin-top: 14px; }
+
+  /* ---------- chips ---------- */
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .chip {
+    padding: 9px 14px; border-radius: 999px; border: 1.5px solid var(--line);
+    background: #0e0a17; color: var(--ink-dim); font-weight: 800; font-size: 14px;
+    text-transform: uppercase; letter-spacing: 1px;
+  }
+  .chip.on { color: #0d0a14; border-color: transparent; }
+  .chip.cat-sex.on { background: var(--c-sex); }
+  .chip.cat-disgust.on { background: var(--c-disgust); }
+  .chip.cat-idiocy.on { background: var(--c-idiocy); }
+  .chip.cat-drama.on { background: var(--c-drama); }
+  .chip.cat-pain.on { background: var(--c-pain); }
+  .dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 6px; vertical-align: 1px; }
+  .dot.cat-sex { background: var(--c-sex); } .dot.cat-disgust { background: var(--c-disgust); }
+  .dot.cat-idiocy { background: var(--c-idiocy); } .dot.cat-drama { background: var(--c-drama); }
+  .dot.cat-pain { background: var(--c-pain); }
+  .tag {
+    font-size: 11px; font-weight: 800; letter-spacing: 1px; text-transform: uppercase;
+    padding: 3px 8px; border-radius: 6px; background: #241a35; color: var(--ink-dim);
+  }
+
+  /* ---------- leaderboard ---------- */
+  .standing { display: flex; align-items: center; gap: 12px; }
+  .rank {
+    font-size: 34px; font-weight: 900; width: 40px; text-align: center;
+    color: var(--line); font-style: italic; flex: none;
+  }
+  .standing.first .rank { color: var(--acid); text-shadow: 0 0 18px rgba(216,255,62,.5); }
+  .standing .who { flex: 1; min-width: 0; }
+  .standing .who .owner { font-size: 20px; font-weight: 900; text-transform: uppercase; letter-spacing: .5px; }
+  .standing .who .cap { font-size: 12px; color: var(--ink-dim); margin-top: 3px; font-weight: 600; }
+  .standing .pts { font-size: 30px; font-weight: 900; flex: none; }
+  .standing .pts small { font-size: 11px; color: var(--ink-dim); display: block; text-align: right; letter-spacing: 2px; }
+  .breakdown { margin-top: 12px; border-top: 1px dashed var(--line); padding-top: 10px; display: none; }
+  .card.open .breakdown { display: block; }
+  .breakdown .m { display: flex; justify-content: space-between; padding: 5px 0; font-size: 15px; }
+  .breakdown .m .n { color: var(--ink); font-weight: 600; }
+  .breakdown .m .c { color: var(--ink-dim); font-size: 12px; margin-left: 6px; }
+  .breakdown .m .v { font-weight: 800; }
+  .capmark { color: var(--acid); font-weight: 900; }
+
+  /* ---------- events ---------- */
+  .event { display: flex; gap: 10px; align-items: flex-start; }
+  .event .body { flex: 1; min-width: 0; }
+  .event .desc { font-size: 16px; font-weight: 600; overflow-wrap: anywhere; }
+  .event .meta { font-size: 12px; color: var(--ink-dim); margin-top: 4px; font-weight: 600; }
+  .event .pts { font-size: 22px; font-weight: 900; flex: none; }
+  .pos { color: var(--acid); } .neg { color: var(--danger); }
+  .sign-toggle { display: flex; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }
+  .sign-toggle button { flex: 1; border-radius: 0; background: transparent; color: var(--ink-dim); padding: 10px; font-size: 18px; }
+  .sign-toggle button.on { background: #241a35; color: var(--ink); }
+  .sign-toggle button.on.minus { color: var(--danger); }
+
+  /* ---------- budget bar ---------- */
+  .budget { margin: 10px 0 4px; }
+  .budget .bar { height: 10px; border-radius: 999px; background: #0e0a17; border: 1px solid var(--line); overflow: hidden; }
+  .budget .fill { height: 100%; background: linear-gradient(90deg, var(--c-drama), var(--acid)); transition: width .25s; }
+  .budget.over .fill { background: var(--danger); }
+  .budget .nums { display: flex; justify-content: space-between; font-size: 12px; color: var(--ink-dim); margin-top: 5px; font-weight: 700; letter-spacing: 1px; }
+  .picker .p {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 11px 12px; border: 1.5px solid var(--line); border-radius: 10px;
+    margin-bottom: 7px; background: #0e0a17; font-weight: 700; font-size: 16px;
+  }
+  .picker .p.sel { border-color: var(--acid); background: rgba(216,255,62,.07); }
+  .picker .p.dis { opacity: .35; }
+  .picker .p .cost { color: var(--ink-dim); font-size: 14px; }
+  .errbox { color: var(--danger); font-size: 14px; font-weight: 600; margin-top: 10px; line-height: 1.5; }
+
+  .flist .fitem { display: flex; align-items: center; gap: 10px; padding: 10px 0; border-bottom: 1px dashed var(--line); }
+  .flist .fitem:last-child { border-bottom: none; }
+  .flist .n { flex: 1; font-weight: 700; font-size: 17px; }
+  .flist .sub { display: block; font-size: 11px; color: var(--ink-dim); font-weight: 600; margin-top: 2px; }
+  .flist .fitem > button { padding: 8px 10px; font-size: 12px; flex: none; }
+  .costpill { background: #241a35; border-radius: 8px; padding: 5px 10px; font-weight: 900; color: var(--acid); flex: none; }
+
+  .empty { text-align: center; color: var(--ink-dim); padding: 36px 20px; font-size: 15px; line-height: 1.6; }
+  .empty b { color: var(--ink); }
+
+  /* ---------- tabs ---------- */
+  nav {
+    position: fixed; bottom: 0; left: 0; right: 0; z-index: 10;
+    display: flex; background: rgba(11,8,18,.92); backdrop-filter: blur(12px);
+    border-top: 1px solid var(--line); padding-bottom: env(safe-area-inset-bottom);
+  }
+  nav button {
+    flex: 1; background: none; border-radius: 0; color: var(--ink-dim);
+    font-size: 11px; letter-spacing: 1.5px; padding: 14px 4px 12px; font-weight: 800;
+  }
+  nav button.on { color: var(--acid); }
+  nav button.on::before { content: ''; display: block; width: 22px; height: 3px; background: var(--acid); border-radius: 3px; margin: -8px auto 6px; box-shadow: 0 0 10px var(--acid); }
+
+  /* ---------- toast ---------- */
+  #toast {
+    position: fixed; left: 14px; right: 14px; bottom: 76px; z-index: 20;
+    background: var(--acid); color: #14120a; border-radius: 12px; padding: 13px 16px;
+    font-weight: 800; font-size: 14px; line-height: 1.45;
+    transform: translateY(140%); transition: transform .3s cubic-bezier(.2,.9,.3,1.2);
+    box-shadow: 0 8px 30px rgba(0,0,0,.5);
+  }
+  #toast.show { transform: translateY(0); }
+  textarea#importbox { width: 100%; height: 90px; background: #0e0a17; color: var(--ink); border: 1px solid var(--line); border-radius: 10px; padding: 10px; font-family: monospace; font-size: 12px; }
+</style>
+
+<header>
+  <div class="wordmark">Fanta<em>tomorrowland</em><small>SEX · DISGUST · IDIOCY · DRAMA · PAIN</small></div>
+</header>
+<main id="view"></main>
+<nav id="tabs"></nav>
+<div id="toast"></div>
+
+<script>
+'use strict';
+// Fantatomorrowland core rules. Pure functions only; UI and storage live in index.html.
+// Rules reference: spec.md
+
+const CATEGORIES = ['sex', 'disgust', 'idiocy', 'drama', 'pain'];
+const BUDGET = 100;
+
+function costOf(name, friends) {
+  const f = friends.find((f) => f.name === name);
+  return f ? f.cost : 0;
+}
+
+function rosterCost(roster, friends) {
+  return roster.reduce((sum, name) => sum + costOf(name, friends), 0);
+}
+
+function validateTeam(team, friends) {
+  const errors = [];
+  if (team.roster.length === 0) {
+    errors.push('The roster is empty.');
+  }
+  const cost = rosterCost(team.roster, friends);
+  if (cost > BUDGET) {
+    errors.push(`Roster costs ${cost}, over the ${BUDGET}-credit budget.`);
+  }
+  if (team.roster.includes(team.owner)) {
+    errors.push(`${team.owner} cannot be in their own team.`);
+  }
+  if (new Set(team.roster).size !== team.roster.length) {
+    errors.push('The roster contains duplicate friends.');
+  }
+  if (!team.roster.includes(team.captain)) {
+    errors.push('The captain must be one of the rostered friends.');
+  }
+  if (!CATEGORIES.includes(team.captainCategory)) {
+    errors.push('The captain category must be one of the five categories.');
+  }
+  return { ok: errors.length === 0, errors };
+}
+
+function eventValueForTeam(team, event) {
+  if (!team.roster.includes(event.friend)) return 0;
+  const doubled = event.friend === team.captain && event.category === team.captainCategory;
+  return doubled ? event.points * 2 : event.points;
+}
+
+function teamScore(team, events) {
+  return events.reduce((sum, e) => sum + eventValueForTeam(team, e), 0);
+}
+
+function standings(teams, events) {
+  return teams
+    .map((t) => ({ ...t, total: teamScore(t, events) }))
+    .sort((a, b) => b.total - a.total);
+}
+
+if (typeof module !== 'undefined') {
+  module.exports = { CATEGORIES, BUDGET, rosterCost, validateTeam, teamScore, standings, eventValueForTeam };
+}
+
+</script>
+<script>
+'use strict';
+/* Thin UI layer. All game rules live in fanta.js (tested). */
+
+const LS_KEY = 'fantatomorrowland';
+const CAT_LABEL = { sex: 'Sex', disgust: 'Disgust', idiocy: 'Idiocy', drama: 'Drama', pain: 'Pain' };
+
+/* storage adapter: some environments (sandboxed iframes, content:// pages)
+   throw on any localStorage access. Fall back to memory and warn. */
+const store = (() => {
+  try {
+    const t = '__fanta_probe__';
+    localStorage.setItem(t, t);
+    localStorage.removeItem(t);
+    return {
+      persistent: true,
+      read: () => localStorage.getItem(LS_KEY),
+      write: (v) => localStorage.setItem(LS_KEY, v),
+    };
+  } catch (e) {
+    let mem = null;
+    return { persistent: false, read: () => mem, write: (v) => { mem = v; } };
+  }
+})();
+
+let state = load();
+let tab = 'board';
+// transient UI state
+let ui = {
+  openTeam: null,
+  ev: { friend: '', category: '', points: 1, sign: 1, desc: '' },
+  builder: null,           // null = closed; else {editingId, owner, roster:[], captain, captainCategory}
+  armed: null,             // id of delete button awaiting confirmation
+  costEditing: null,       // friend name whose cost is being edited inline
+};
+
+function load() {
+  try {
+    const s = JSON.parse(store.read());
+    if (s && s.friends && s.teams && s.events) return s;
+  } catch (e) {}
+  return { friends: [], teams: [], events: [] };
+}
+function save() { store.write(JSON.stringify(state)); }
+function uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2, 7); }
+function esc(s) { return String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c])); }
+
+let toastTimer;
+function toast(msg) {
+  const t = document.getElementById('toast');
+  t.innerHTML = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 3400);
+}
+
+/* two-tap destructive buttons: first tap arms, second executes */
+function armOr(id, fn) {
+  if (ui.armed === id) { ui.armed = null; fn(); }
+  else { ui.armed = id; render(); setTimeout(() => { if (ui.armed === id) { ui.armed = null; render(); } }, 2500); }
+}
+
+/* ============ TABS ============ */
+const TABS = [ ['board', 'Board'], ['events', 'Events'], ['teams', 'Teams'], ['friends', 'Friends'] ];
+function renderTabs() {
+  document.getElementById('tabs').innerHTML = TABS.map(([id, label]) =>
+    `<button class="${tab === id ? 'on' : ''}" data-a="go" data-x="${id}">${label}</button>`).join('');
+}
+function go(t) { tab = t; ui.armed = null; render(); window.scrollTo(0, 0); }
+
+/* ============ BOARD ============ */
+function renderBoard() {
+  if (!state.teams.length) {
+    return `<div class="empty">No teams yet.<br>Add your <b>friends</b> with their price, then build the <b>teams</b>.</div>`;
+  }
+  const table = standings(state.teams, state.events);
+  return table.map((t, i) => {
+    const open = ui.openTeam === t.id;
+    const members = [...t.roster].map((name) => {
+      const contrib = state.events.filter((e) => e.friend === name)
+        .reduce((s, e) => s + eventValueForTeam(t, e), 0);
+      return { name, contrib, isCap: name === t.captain };
+    }).sort((a, b) => b.contrib - a.contrib);
+    return `
+    <div class="card ${open ? 'open' : ''} standing-card ${i === 0 ? 'first' : ''}" data-a="toggleTeam" data-x="${t.id}">
+      <div class="standing ${i === 0 ? 'first' : ''}">
+        <div class="rank">${i + 1}</div>
+        <div class="who">
+          <div class="owner">${esc(t.owner)}</div>
+          <div class="cap"><span class="capmark">©</span> ${esc(t.captain)} · <span class="dot cat-${t.captainCategory}"></span>${CAT_LABEL[t.captainCategory]} ×2</div>
+        </div>
+        <div class="pts">${t.total}<small>PTS</small></div>
+      </div>
+      <div class="breakdown">
+        ${members.map((m) => `<div class="m"><span class="n">${m.isCap ? '<span class="capmark">©</span> ' : ''}${esc(m.name)}</span><span class="v ${m.contrib < 0 ? 'neg' : ''}">${m.contrib > 0 ? '+' : ''}${m.contrib}</span></div>`).join('')}
+      </div>
+    </div>`;
+  }).join('');
+}
+function toggleTeam(id) { ui.openTeam = ui.openTeam === id ? null : id; render(); }
+
+/* ============ EVENTS ============ */
+function renderEvents() {
+  const e = ui.ev;
+  const canLog = state.friends.length && state.teams.length;
+  const form = !canLog ? `<div class="empty">Set up <b>friends</b> and at least one <b>team</b> before logging events.</div>` : `
+  <div class="card">
+    <label class="f">Who did it</label>
+    <div class="chips">${state.friends.map((f, i) =>
+      `<button class="chip ${e.friend === f.name ? 'on cat-idiocy' : ''}" data-a="evFriend" data-x="${i}">${esc(f.name)}</button>`).join('')}
+    </div>
+    <label class="f">Category</label>
+    <div class="chips">${CATEGORIES.map((c) =>
+      `<button class="chip cat-${c} ${e.category === c ? 'on' : ''}" data-a="evCat" data-x="${c}">${CAT_LABEL[c]}</button>`).join('')}
+    </div>
+    <label class="f">Points</label>
+    <div class="row">
+      <div class="sign-toggle" style="flex:0 0 96px">
+        <button class="${e.sign > 0 ? 'on' : ''}" data-a="evSign" data-x="1">+</button>
+        <button class="minus ${e.sign < 0 ? 'on' : ''}" data-a="evSign" data-x="-1">−</button>
+      </div>
+      <div class="chips" style="flex:1">${[1, 2, 3, 5, 10].map((p) =>
+        `<button class="chip ${e.points === p ? 'on cat-idiocy' : ''}" data-a="evPts" data-x="${p}">${p}</button>`).join('')}
+      </div>
+    </div>
+    <label class="f">Custom points</label>
+    <input type="number" min="1" step="1" value="${e.points}" data-c="evPtsCustom">
+    <label class="f">What happened</label>
+    <input type="text" id="evdesc" placeholder="e.g. cried during the Armin set" value="${esc(e.desc)}" data-i="evdesc">
+    <button class="primary wide" data-a="addEvent">Score it</button>
+  </div>`;
+
+  const history = state.events.length ? `<h2>History</h2>` + [...state.events].reverse().map((ev) => `
+    <div class="card event">
+      <div class="body">
+        <div class="desc">${esc(ev.description) || '<span style="color:var(--ink-dim)">(no description)</span>'}</div>
+        <div class="meta">${esc(ev.friend)} · <span class="dot cat-${ev.category}"></span>${CAT_LABEL[ev.category]} · ${new Date(ev.ts).toLocaleString([], { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' })}</div>
+      </div>
+      <div class="pts ${ev.points < 0 ? 'neg' : 'pos'}">${ev.points > 0 ? '+' : ''}${ev.points}</div>
+      <button class="danger ${ui.armed === 'ev:' + ev.id ? 'armed' : ''}" data-a="delEvent" data-x="${ev.id}">${ui.armed === 'ev:' + ev.id ? 'Sure?' : '✕'}</button>
+    </div>`).join('') : '';
+  return form + history;
+}
+function evSet(k, v) { ui.ev[k] = v; render(); }
+function evSetFriend(i) { evSet('friend', state.friends[i].name); }
+function addEvent() {
+  const e = ui.ev;
+  if (!e.friend) return toast('Pick who did it.');
+  if (!e.category) return toast('Pick a category.');
+  const pts = e.sign * Math.abs(e.points || 0);
+  if (!pts) return toast('Points cannot be zero.');
+  const ev = { id: uid(), ts: Date.now(), description: (document.getElementById('evdesc')?.value || e.desc || '').trim(), friend: e.friend, category: e.category, points: pts };
+  state.events.push(ev);
+  save();
+  const hits = state.teams
+    .map((t) => ({ t, v: eventValueForTeam(t, ev) }))
+    .filter((x) => x.v !== 0)
+    .map((x) => `${esc(x.t.owner)} ${x.v > 0 ? '+' : ''}${x.v}${Math.abs(x.v) === Math.abs(pts) * 2 ? ' ©×2' : ''}`);
+  toast(hits.length ? `${esc(ev.friend)} · ${CAT_LABEL[ev.category]}: &nbsp;${hits.join(' · ')}` : `Logged, but no team owns ${esc(ev.friend)}.`);
+  ui.ev = { friend: '', category: '', points: 1, sign: 1, desc: '' };
+  render();
+}
+function delEvent(id) { armOr('ev:' + id, () => { state.events = state.events.filter((e) => e.id !== id); save(); render(); }); }
+
+/* ============ TEAMS ============ */
+function renderTeams() {
+  if (ui.builder) return renderBuilder();
+  const list = state.teams.length ? state.teams.map((t) => `
+    <div class="card">
+      <div class="standing">
+        <div class="who">
+          <div class="owner">${esc(t.owner)}</div>
+          <div class="cap"><span class="capmark">©</span> ${esc(t.captain)} · <span class="dot cat-${t.captainCategory}"></span>${CAT_LABEL[t.captainCategory]} ×2 · ${t.roster.length} picks · ${rosterCost(t.roster, state.friends)}/${BUDGET} cr</div>
+        </div>
+        <button class="ghost" data-a="editTeam" data-x="${t.id}">Edit</button>
+        <button class="danger ${ui.armed === 'tm:' + t.id ? 'armed' : ''}" data-a="delTeam" data-x="${t.id}">${ui.armed === 'tm:' + t.id ? 'Sure?' : '✕'}</button>
+      </div>
+      <div class="cap" style="margin-top:8px;color:var(--ink-dim);font-size:13px">${t.roster.map(esc).join(' · ')}</div>
+    </div>`).join('') : `<div class="empty">No teams yet. Every participant gets <b>${'100'} credits</b>, unlimited picks, no self-picks.</div>`;
+  const canBuild = state.friends.length >= 2;
+  return list + (canBuild
+    ? `<button class="primary wide" data-a="newTeam">＋ New team</button>`
+    : `<div class="empty">Add at least two <b>friends</b> first.</div>`);
+}
+function openBuilder(t) {
+  ui.builder = t
+    ? { editingId: t.id, owner: t.owner, roster: [...t.roster], captain: t.captain, captainCategory: t.captainCategory }
+    : { editingId: null, owner: '', roster: [], captain: '', captainCategory: '' };
+  render(); window.scrollTo(0, 0);
+}
+function editTeam(id) { openBuilder(state.teams.find((t) => t.id === id)); }
+function delTeam(id) { armOr('tm:' + id, () => { state.teams = state.teams.filter((t) => t.id !== id); save(); render(); }); }
+function renderBuilder() {
+  const b = ui.builder;
+  const spent = rosterCost(b.roster, state.friends);
+  const left = BUDGET - spent;
+  return `
+  <div class="card">
+    <label class="f">Team owner (participant)</label>
+    <select data-c="owner">
+      <option value="">— pick owner —</option>
+      ${state.friends.map((f) => `<option ${b.owner === f.name ? 'selected' : ''}>${esc(f.name)}</option>`).join('')}
+    </select>
+
+    <label class="f">Roster — tap to pick (owner is locked: no self-picks)</label>
+    <div class="budget ${left < 0 ? 'over' : ''}">
+      <div class="bar"><div class="fill" style="width:${Math.min(100, spent)}%"></div></div>
+      <div class="nums"><span>SPENT ${spent}</span><span>${left < 0 ? 'OVER BY ' + (-left) : left + ' LEFT'}</span></div>
+    </div>
+    <div class="picker">
+      ${state.friends.map((f, i) => {
+        const sel = b.roster.includes(f.name);
+        const dis = f.name === b.owner;
+        return `<div class="p ${sel ? 'sel' : ''} ${dis ? 'dis' : ''}" ${dis ? '' : `data-a="bPick" data-x="${i}"`}>
+          <span>${esc(f.name)}${dis ? ' <span class="tag">owner</span>' : ''}</span><span class="cost">${f.cost} cr</span></div>`;
+      }).join('')}
+    </div>
+
+    <label class="f">Captain (×2 in their category)</label>
+    <div class="chips">${b.roster.length ? b.roster.map((n, i) =>
+      `<button class="chip ${b.captain === n ? 'on cat-idiocy' : ''}" data-a="bCap" data-x="${i}">© ${esc(n)}</button>`).join('') : '<span style="color:var(--ink-dim);font-size:14px">pick the roster first</span>'}
+    </div>
+    <label class="f">Captain category</label>
+    <div class="chips">${CATEGORIES.map((c) =>
+      `<button class="chip cat-${c} ${b.captainCategory === c ? 'on' : ''}" data-a="bCat" data-x="${c}">${CAT_LABEL[c]}</button>`).join('')}
+    </div>
+    <div class="errbox" id="berr"></div>
+    <button class="primary wide" data-a="saveTeam">${b.editingId ? 'Save changes' : 'Create team'}</button>
+    <button class="ghost wide" data-a="cancelBuilder">Cancel</button>
+  </div>`;
+}
+function bSet(k, v) {
+  const b = ui.builder;
+  b[k] = v;
+  if (k === 'owner') { b.roster = b.roster.filter((n) => n !== v); if (b.captain === v) b.captain = ''; }
+  render();
+}
+function bCap(i) { bSet('captain', ui.builder.roster[i]); }
+function bPick(i) {
+  const name = state.friends[i].name;
+  const b = ui.builder;
+  if (name === b.owner) return; // no self-picks, even if the disabled row is somehow tapped
+  if (b.roster.includes(name)) { b.roster = b.roster.filter((n) => n !== name); if (b.captain === name) b.captain = ''; }
+  else b.roster.push(name);
+  render();
+}
+function saveTeam() {
+  const b = ui.builder;
+  if (!b.owner) { document.getElementById('berr').textContent = 'Pick a team owner.'; return; }
+  if (!b.editingId && state.teams.some((t) => t.owner === b.owner)) { document.getElementById('berr').textContent = `${b.owner} already has a team.`; return; }
+  const team = { id: b.editingId || uid(), owner: b.owner, roster: b.roster, captain: b.captain, captainCategory: b.captainCategory };
+  const res = validateTeam(team, state.friends);
+  if (!res.ok) { document.getElementById('berr').innerHTML = res.errors.map(esc).join('<br>'); return; }
+  if (b.editingId) state.teams = state.teams.map((t) => (t.id === b.editingId ? team : t));
+  else state.teams.push(team);
+  save(); ui.builder = null; render();
+  toast(`Team ${esc(team.owner)} saved · ${rosterCost(team.roster, state.friends)}/${BUDGET} cr`);
+}
+
+/* ============ FRIENDS ============ */
+function renderFriends() {
+  const raw = {};
+  state.events.forEach((e) => { raw[e.friend] = (raw[e.friend] || 0) + e.points; });
+  const list = state.friends.length ? `<div class="card flist">${state.friends.map((f, i) => {
+    const used = state.teams.some((t) => t.owner === f.name || t.roster.includes(f.name)) || state.events.some((e) => e.friend === f.name);
+    if (ui.costEditing === f.name) {
+      return `<div class="fitem">
+        <span class="n">${esc(f.name)}</span>
+        <input type="number" id="costinput" min="1" value="${f.cost}" style="flex:0 0 80px">
+        <button class="primary" data-a="saveCost" data-x="${i}">OK</button>
+        <button class="ghost" data-a="cancelCost">✕</button>
+      </div>`;
+    }
+    return `<div class="fitem">
+      <span class="n">${esc(f.name)}<span class="sub">${raw[f.name] ? (raw[f.name] > 0 ? '+' : '') + raw[f.name] + ' raw pts scored' : 'no points yet'}</span></span>
+      <span class="costpill">${f.cost}</span>
+      <button class="ghost" data-a="editCost" data-x="${i}">Cost</button>
+      ${used ? '' : `<button class="danger ${ui.armed === 'fr:' + f.name ? 'armed' : ''}" data-a="delFriend" data-x="${i}">${ui.armed === 'fr:' + f.name ? 'Sure?' : '✕'}</button>`}
+    </div>`;
+  }).join('')}</div>` : '';
+  return `
+  <div class="card">
+    <label class="f">Add a friend to the market</label>
+    <div class="row">
+      <input type="text" id="fname" placeholder="Name" style="flex:2">
+      <input type="number" id="fcost" placeholder="Cost" min="1" style="flex:1">
+    </div>
+    <button class="primary wide" data-a="addFriend">Add</button>
+  </div>
+  ${list}
+  <h2>Backup</h2>
+  <div class="card">
+    <div class="row">
+      <button class="ghost" data-a="exportData">Export JSON</button>
+      <button class="ghost" data-a="showImport">Import</button>
+    </div>
+    <div id="importwrap" style="display:none;margin-top:10px">
+      <textarea id="importbox" placeholder="Paste a previously exported JSON here"></textarea>
+      <button class="wide danger" data-a="importData">Replace everything with this backup</button>
+    </div>
+  </div>`;
+}
+function addFriend() {
+  const name = document.getElementById('fname').value.trim();
+  const cost = parseInt(document.getElementById('fcost').value, 10);
+  if (!name) return toast('Name is required.');
+  if (state.friends.some((f) => f.name.toLowerCase() === name.toLowerCase())) return toast(`${esc(name)} is already in the market.`);
+  if (!(cost > 0)) return toast('Cost must be a positive number.');
+  state.friends.push({ name, cost });
+  save(); render();
+}
+function editCost(i) { ui.costEditing = state.friends[i].name; render(); }
+function saveCost(i) {
+  const cost = parseInt(document.getElementById('costinput').value, 10);
+  if (!(cost > 0)) return toast('Cost must be a positive number.');
+  state.friends[i].cost = cost;
+  ui.costEditing = null;
+  save(); render();
+}
+function delFriend(i) {
+  const name = state.friends[i].name;
+  armOr('fr:' + name, () => { state.friends = state.friends.filter((f) => f.name !== name); save(); render(); });
+}
+
+function exportData() {
+  const json = JSON.stringify(state, null, 2);
+  try {
+    const blob = new Blob([json], { type: 'application/json' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = `fantatomorrowland-${new Date().toISOString().slice(0, 10)}.json`;
+    a.click();
+    URL.revokeObjectURL(a.href);
+    toast('Backup downloaded.');
+  } catch (e) {
+    // downloads blocked (sandboxed iframe): expose the JSON for copy-paste
+    document.getElementById('importwrap').style.display = 'block';
+    document.getElementById('importbox').value = json;
+    toast('Download blocked here: copy the JSON from the box below.');
+  }
+}
+function importData() {
+  try {
+    const s = JSON.parse(document.getElementById('importbox').value);
+    if (!s || !Array.isArray(s.friends) || !Array.isArray(s.teams) || !Array.isArray(s.events)) throw new Error('bad shape');
+    state = s; save(); render(); toast('Backup restored.');
+  } catch (e) { toast('That JSON does not look like a Fantatomorrowland backup.'); }
+}
+
+/* ============ ROOT ============ */
+function render() {
+  renderTabs();
+  const v = { board: renderBoard, events: renderEvents, teams: renderTeams, friends: renderFriends }[tab];
+  const warn = store.persistent ? '' :
+    `<div class="card" style="border-color:var(--danger);color:var(--danger);font-size:14px;font-weight:700">
+       ⚠ This browser won't keep data after you close the page. Export a JSON backup (Friends tab) before leaving.
+     </div>`;
+  document.getElementById('view').innerHTML = warn + v();
+}
+
+/* event delegation: no inline handlers (strict CSPs block them) */
+const ACTIONS = {
+  go: (x) => go(x),
+  toggleTeam: (x) => toggleTeam(x),
+  evFriend: (x) => evSetFriend(+x),
+  evCat: (x) => evSet('category', x),
+  evSign: (x) => evSet('sign', +x),
+  evPts: (x) => evSet('points', +x),
+  addEvent: () => addEvent(),
+  delEvent: (x) => delEvent(x),
+  newTeam: () => openBuilder(),
+  editTeam: (x) => editTeam(x),
+  delTeam: (x) => delTeam(x),
+  bPick: (x) => bPick(+x),
+  bCap: (x) => bCap(+x),
+  bCat: (x) => bSet('captainCategory', x),
+  saveTeam: () => saveTeam(),
+  cancelBuilder: () => { ui.builder = null; render(); },
+  addFriend: () => addFriend(),
+  editCost: (x) => editCost(+x),
+  saveCost: (x) => saveCost(+x),
+  cancelCost: () => { ui.costEditing = null; render(); },
+  delFriend: (x) => delFriend(+x),
+  exportData: () => exportData(),
+  showImport: () => { document.getElementById('importwrap').style.display = 'block'; },
+  importData: () => importData(),
+};
+const CHANGES = {
+  evPtsCustom: (el) => evSet('points', Math.abs(parseInt(el.value, 10) || 1)),
+  owner: (el) => bSet('owner', el.value),
+};
+const INPUTS = {
+  evdesc: (el) => { ui.ev.desc = el.value; },
+};
+document.addEventListener('click', (e) => {
+  const el = e.target.closest('[data-a]');
+  if (el && ACTIONS[el.dataset.a]) ACTIONS[el.dataset.a](el.dataset.x, el);
+});
+document.addEventListener('change', (e) => {
+  const a = e.target.dataset && e.target.dataset.c;
+  if (a && CHANGES[a]) CHANGES[a](e.target);
+});
+document.addEventListener('input', (e) => {
+  const a = e.target.dataset && e.target.dataset.i;
+  if (a && INPUTS[a]) INPUTS[a](e.target);
+});
+
+render();
+</script>
+
+<script>
+// PWA offline support. Guarded so the same file keeps working where service
+// workers are unavailable (file://, sandboxed iframes).
+if ('serviceWorker' in navigator) {
+  try { navigator.serviceWorker.register('sw.js').catch(() => {}); } catch (e) {}
+}
+</script>
