@@ -82,3 +82,12 @@ test('the logo image is inlined in both app builds', () => {
     assert.ok(!html.includes('__LOGO__'), `${f} still contains the unreplaced logo placeholder`);
   }
 });
+
+test('fresh.html: network-only twin for forced refreshes', () => {
+  assert.ok(fs.existsSync(dist('fresh.html')), 'docs/fresh.html missing');
+  const fresh = fs.readFileSync(dist('fresh.html'), 'utf8');
+  const single = fs.readFileSync(dist('fantatomorrowland.html'), 'utf8');
+  assert.equal(fresh, single, 'fresh.html must be the same app (no sw registration, same data)');
+  const sw = fs.readFileSync(dist('sw.js'), 'utf8');
+  assert.ok(!sw.includes('fresh.html'), 'the service worker must never precache fresh.html');
+});

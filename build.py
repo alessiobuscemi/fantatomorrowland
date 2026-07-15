@@ -139,6 +139,11 @@ def build() -> None:
     # 1) single self-contained file (no manifest link: nothing to 404 on)
     (DIST / "fantatomorrowland.html").write_text(single, encoding="utf-8")
 
+    # 1b) network-only twin: never precached by the service worker (and it
+    # registers none itself), so loading /fresh.html always pulls the latest
+    # deployed version from the network while sharing the same localStorage
+    (DIST / "fresh.html").write_text(single, encoding="utf-8")
+
     # 2) PWA variant: manifest link + guarded service-worker registration
     head_links = (
         "</title>\n"
