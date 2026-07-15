@@ -1,11 +1,22 @@
 'use strict';
 // Cache-first service worker. The cache name embeds a build hash, so a new
 // deploy invalidates the old cache on the next online visit.
-const CACHE = 'fanta-32e58724ba0c';
+const CACHE = 'fanta-c03ff0c4';
 const ASSETS = ['./', 'index.html', 'manifest.webmanifest', 'icon-192.png', 'icon-512.png'];
 
 self.addEventListener('install', (e) => {
-  e.waitUntil(caches.open(CACHE).then((c) => c.addAll(ASSETS)).then(() => self.skipWaiting()));
+  // fetch with cache:'no-cache' so a stale HTTP cache (GitHub Pages sends
+  // max-age=600) can never be precached as the "new" version
+  e.waitUntil(
+    caches.open(CACHE).then((c) =>
+      Promise.all(ASSETS.map((u) =>
+        fetch(u, { cache: 'no-cache' }).then((r) => {
+          if (!r.ok) throw new Error('precache failed: ' + u);
+          return c.put(u, r);
+        })
+      ))
+    ).then(() => self.skipWaiting())
+  );
 });
 
 self.addEventListener('activate', (e) => {

@@ -61,3 +61,16 @@ test('PWA self-updates: registration triggers an update check and reloads on con
   assert.match(html, /controllerchange/, 'must react when the new version takes over');
   assert.match(html, /location\.reload\(\)/, 'must reload once so the user sees the new version');
 });
+
+test('service worker precache bypasses the HTTP cache (Pages caches files for 10 min)', () => {
+  const sw = fs.readFileSync(dist('sw.js'), 'utf8');
+  assert.match(sw, /cache:\s*'no-cache'/, 'precache fetches must not be satisfied by stale HTTP cache');
+});
+
+test('a build stamp is visible in the app so the running version can be identified', () => {
+  for (const f of ['index.html', 'fantatomorrowland.html']) {
+    const html = fs.readFileSync(dist(f), 'utf8');
+    assert.match(html, /build [0-9a-f]{8}/, `${f} must show the build stamp`);
+    assert.ok(!html.includes('__BUILD__'), `${f} still contains the unreplaced placeholder`);
+  }
+});

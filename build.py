@@ -43,7 +43,18 @@ const CACHE = 'fanta-{build_hash}';
 const ASSETS = ['./', 'index.html', 'manifest.webmanifest', 'icon-192.png', 'icon-512.png'];
 
 self.addEventListener('install', (e) => {{
-  e.waitUntil(caches.open(CACHE).then((c) => c.addAll(ASSETS)).then(() => self.skipWaiting()));
+  // fetch with cache:'no-cache' so a stale HTTP cache (GitHub Pages sends
+  // max-age=600) can never be precached as the "new" version
+  e.waitUntil(
+    caches.open(CACHE).then((c) =>
+      Promise.all(ASSETS.map((u) =>
+        fetch(u, {{ cache: 'no-cache' }}).then((r) => {{
+          if (!r.ok) throw new Error('precache failed: ' + u);
+          return c.put(u, r);
+        }})
+      ))
+    ).then(() => self.skipWaiting())
+  );
 }});
 
 self.addEventListener('activate', (e) => {{
@@ -138,6 +149,11 @@ def build() -> None:
     DIST.mkdir(exist_ok=True)
     single = bundle()
 
+    # one stamp identifies this build everywhere: visible in the app's
+    # Friends tab, and embedded in the service-worker cache name
+    stamp = hashlib.sha256(single.encode()).hexdigest()[:8]
+    single = single.replace("__BUILD__", stamp)
+
     # 1) single self-contained file (no manifest link: nothing to 404 on)
     (DIST / "fantatomorrowland.html").write_text(single, encoding="utf-8")
 
@@ -153,15 +169,14 @@ def build() -> None:
 
     (DIST / "manifest.webmanifest").write_text(json.dumps(MANIFEST, indent=2), encoding="utf-8")
 
-    build_hash = hashlib.sha256(pwa.encode()).hexdigest()[:12]
-    (DIST / "sw.js").write_text(SW_TEMPLATE.format(build_hash=build_hash), encoding="utf-8")
+    (DIST / "sw.js").write_text(SW_TEMPLATE.format(build_hash=stamp), encoding="utf-8")
 
     for size in (192, 512):
         make_icon(size).save(DIST / f"icon-{size}.png")
 
     for f in sorted(DIST.iterdir()):
         print(f"  {f.name:24} {f.stat().st_size / 1024:7.1f} KiB")
-    print(f"build hash: {build_hash}")
+    print(f"build stamp: {stamp}")
 
 
 if __name__ == "__main__":
