@@ -69,8 +69,20 @@ REGISTER_SNIPPET = """
 <script>
 // PWA offline support. Guarded so the same file keeps working where service
 // workers are unavailable (file://, sandboxed iframes).
+// Self-updating: on launch we check for a new version; when the new service
+// worker takes control (skipWaiting + claim), reload once so the user sees it
+// immediately instead of on the next launch. Never reloads on first install.
 if ('serviceWorker' in navigator) {
-  try { navigator.serviceWorker.register('sw.js').catch(() => {}); } catch (e) {}
+  try {
+    const hadController = !!navigator.serviceWorker.controller;
+    navigator.serviceWorker.register('sw.js')
+      .then((reg) => reg.update())
+      .catch(() => {});
+    let reloaded = false;
+    navigator.serviceWorker.addEventListener('controllerchange', () => {
+      if (hadController && !reloaded) { reloaded = true; location.reload(); }
+    });
+  } catch (e) {}
 }
 </script>
 """

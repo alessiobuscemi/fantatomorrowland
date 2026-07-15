@@ -1,7 +1,7 @@
 'use strict';
 // Cache-first service worker. The cache name embeds a build hash, so a new
 // deploy invalidates the old cache on the next online visit.
-const CACHE = 'fanta-b90bd208e68b';
+const CACHE = 'fanta-32e58724ba0c';
 const ASSETS = ['./', 'index.html', 'manifest.webmanifest', 'icon-192.png', 'icon-512.png'];
 
 self.addEventListener('install', (e) => {

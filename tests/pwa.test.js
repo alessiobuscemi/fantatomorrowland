@@ -54,3 +54,10 @@ test('PWA index declares favicon and apple-touch-icon', () => {
   assert.match(html, /rel="icon"/);
   assert.match(html, /rel="apple-touch-icon"/);
 });
+
+test('PWA self-updates: registration triggers an update check and reloads on controller change', () => {
+  const html = fs.readFileSync(dist('index.html'), 'utf8');
+  assert.match(html, /reg\.update\(\)/, 'must proactively check for a new service worker');
+  assert.match(html, /controllerchange/, 'must react when the new version takes over');
+  assert.match(html, /location\.reload\(\)/, 'must reload once so the user sees the new version');
+});
