@@ -141,3 +141,10 @@ test('friends tab uses a people icon and the nav has no floating indicator line'
   assert.ok(!html.includes('💸'), 'money icon is confusing for a friends tab');
   assert.ok(!html.includes('nav button.on::before'), 'active-tab indicator line should be gone');
 });
+
+test('toast is truly hidden when inactive (was a permanent yellow bar over the nav)', () => {
+  const html = fs.readFileSync(path.join(__dirname, '..', 'docs', 'fantatomorrowland.html'), 'utf8');
+  assert.ok(!html.includes('translateY(140%)'), 'the broken 140% slide must be gone');
+  const toastRule = html.match(/#toast \{[^}]*\}/s);
+  assert.ok(toastRule && toastRule[0].includes('visibility: hidden'), '#toast must be visibility-hidden at rest');
+});
