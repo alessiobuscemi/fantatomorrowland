@@ -74,3 +74,11 @@ test('a build stamp is visible in the app so the running version can be identifi
     assert.ok(!html.includes('__BUILD__'), `${f} still contains the unreplaced placeholder`);
   }
 });
+
+test('the logo image is inlined in both app builds', () => {
+  for (const f of ['index.html', 'fantatomorrowland.html']) {
+    const html = fs.readFileSync(dist(f), 'utf8');
+    assert.match(html, /class="logo" src="data:image\/jpeg;base64,/, `${f} must inline the logo`);
+    assert.ok(!html.includes('__LOGO__'), `${f} still contains the unreplaced logo placeholder`);
+  }
+});

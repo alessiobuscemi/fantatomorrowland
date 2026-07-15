@@ -11,11 +11,13 @@ Outputs (in docs/, which GitHub Pages serves from the main branch):
 
 Usage: python3 build.py
 """
+import base64
 import hashlib
+import io
 import json
 from pathlib import Path
 
-from PIL import Image, ImageDraw
+from PIL import Image
 
 ROOT = Path(__file__).parent
 DIST = ROOT / "docs"  # named docs so GitHub Pages can serve it straight from main
@@ -107,47 +109,27 @@ def bundle() -> str:
     return html.replace(SRC_TAG, f"<script>\n{logic}\n</script>")
 
 
-def _mix(c1, c2, t):
-    return tuple(int(a + (b - a) * t) for a, b in zip(c1, c2))
+LOGO = ROOT / "assets" / "logo.jpg"
 
 
 def make_icon(size: int) -> Image.Image:
-    """Original festival emblem (NOT the trademarked Tomorrowland logo):
-    a symmetric main-stage gate with mirrored wings under a rising sun,
-    on a purple radial glow. Full-bleed so it works as a maskable icon."""
-    bg, glow = (11, 8, 18), (64, 34, 96)
-    pink, purple, acid, dark = "#ff3ea5", "#b26bff", "#d8ff3e", "#0b0812"
-    img = Image.new("RGB", (size, size), bg)
-    d = ImageDraw.Draw(img)
-    s = size
+    """App icon: the user-provided logo (assets/logo.jpg), square full-bleed."""
+    return Image.open(LOGO).convert("RGB").resize((size, size), Image.LANCZOS)
 
-    # radial glow, drawn as concentric blended circles
-    cx, cy = s * 0.5, s * 0.44
-    steps = 48
-    for i in range(steps):
-        t = i / steps
-        r = s * 0.62 * (1 - t)
-        d.ellipse([cx - r, cy - r, cx + r, cy + r], fill=_mix(bg, glow, t))
 
-    # rising sun behind the gate
-    d.ellipse([s * 0.36, s * 0.10, s * 0.64, s * 0.38], fill=pink)
-
-    # mirrored side wings
-    d.polygon([(s * 0.04, s * 0.80), (s * 0.28, s * 0.34), (s * 0.44, s * 0.80)], fill=purple)
-    d.polygon([(s * 0.56, s * 0.80), (s * 0.72, s * 0.34), (s * 0.96, s * 0.80)], fill=purple)
-
-    # central stage pyramid with a dark doorway
-    d.polygon([(s * 0.24, s * 0.80), (s * 0.50, s * 0.18), (s * 0.76, s * 0.80)], fill=acid)
-    d.polygon([(s * 0.41, s * 0.80), (s * 0.50, s * 0.50), (s * 0.59, s * 0.80)], fill=dark)
-
-    # ground line
-    d.rectangle([s * 0.04, s * 0.80, s * 0.96, s * 0.835], fill=acid)
-    return img
+def logo_data_uri(size: int = 112, quality: int = 82) -> str:
+    """Small inlined copy of the logo for the in-app header."""
+    img = Image.open(LOGO).convert("RGB").resize((size, size), Image.LANCZOS)
+    buf = io.BytesIO()
+    img.save(buf, "JPEG", quality=quality, optimize=True)
+    return "data:image/jpeg;base64," + base64.b64encode(buf.getvalue()).decode()
 
 
 def build() -> None:
     DIST.mkdir(exist_ok=True)
     single = bundle()
+
+    single = single.replace("__LOGO__", logo_data_uri())
 
     # one stamp identifies this build everywhere: visible in the app's
     # Friends tab, and embedded in the service-worker cache name

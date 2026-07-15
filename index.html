@@ -37,8 +37,13 @@
     overscroll-behavior-y: contain;
   }
   header {
-    padding: 18px 16px 10px;
-    display: flex; align-items: baseline; justify-content: space-between;
+    padding: 16px 16px 10px;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .logo {
+    width: 54px; height: 54px; border-radius: 50%; object-fit: cover; flex: none;
+    border: 1.5px solid rgba(216, 255, 62, .45);
+    box-shadow: 0 0 22px rgba(216, 255, 62, .3), 0 0 40px rgba(178, 107, 255, .25);
   }
   .wordmark {
     font-weight: 900; font-size: 27px; letter-spacing: .5px; text-transform: uppercase;
@@ -207,6 +212,7 @@
 </style>
 
 <header>
+  <img class="logo" src="__LOGO__" alt="">
   <div class="wordmark">Fanta<em>tomorrowland</em><small>💋 SEX · 🤮 DISGUST · 🤡 IDIOCY · 🎭 DRAMA · 🤕 PAIN</small></div>
 </header>
 <main id="view"></main>
